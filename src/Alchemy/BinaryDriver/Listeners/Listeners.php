@@ -30,7 +30,7 @@ class Listeners extends EventEmitter
      *
      * @return ListenersInterface
      */
-    public function register(ListenerInterface $listener, EventEmitter $target = null)
+    public function register(ListenerInterface $listener, ?EventEmitter $target = null)
     {
         $EElisteners = array();
 
@@ -38,7 +38,7 @@ class Listeners extends EventEmitter
             $EElisteners = $this->forwardEvents($listener, $target, $listener->forwardedEvents());
         }
 
-        $this->storage->attach($listener, $EElisteners);
+        $this->storage[$listener] = $EElisteners;
 
         return $this;
     }
@@ -62,7 +62,7 @@ class Listeners extends EventEmitter
             $listener->removeListener($event, $EElistener);
         }
 
-        $this->storage->detach($listener);
+        unset($this->storage[$listener]);
 
         return $this;
     }
